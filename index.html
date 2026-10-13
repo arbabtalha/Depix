@@ -1,0 +1,2975 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Restore, repair and sharpen photos privately | Depix</title>
+    <meta
+      name="description"
+      content="Give old photos a little care. Repair scratches, reduce blur and noise, enlarge images, and read text with Depix. Free tools that keep images in your browser."
+    />
+    <meta name="theme-color" content="#181a17" />
+    <meta name="referrer" content="no-referrer" />
+    <meta property="og:title" content="Depix | A clearer memory" />
+    <meta
+      property="og:description"
+      content="A private, free photo restoration workspace. No uploads to a server. No watermarks."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://arbabtalha.github.io/Depix/" />
+    <link rel="canonical" href="https://arbabtalha.github.io/Depix/" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Depix",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web browser",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    </script>
+    <style>
+      /* Adapted from the Costume single-file starter. Primitive -> semantic -> component tokens. */
+      :root {
+        --ink-950: #121410;
+        --ink-900: #181a17;
+        --ink-850: #20231e;
+        --ink-800: #292d26;
+        --ink-600: #747e6c;
+        --paper-50: #f4f3eb;
+        --paper-200: #d5d8c9;
+        --paper-400: #abb29f;
+        --lime-300: #d5ed9b;
+        --lime-400: #bedc7b;
+        --red-300: #ffb8a5;
+        --bg: var(--ink-900);
+        --surface: var(--ink-850);
+        --surface-alt: var(--ink-800);
+        --text: var(--paper-50);
+        --muted: var(--paper-400);
+        --border: var(--ink-600);
+        --accent: var(--lime-300);
+        --accent-hover: var(--lime-400);
+        --on-accent: var(--ink-950);
+        --danger: var(--red-300);
+        --canvas-bg: var(--ink-950);
+        --button-bg: var(--surface-alt);
+        --s1: 0.25rem;
+        --s2: 0.5rem;
+        --s3: 0.75rem;
+        --s4: 1rem;
+        --s6: 1.5rem;
+        --s8: 2rem;
+        --s12: 3rem;
+        --s16: 4rem;
+        --s24: 6rem;
+        --xs: 0.75rem;
+        --sm: 0.875rem;
+        --base: 1rem;
+        --lg: 1.25rem;
+        --xl: 1.5rem;
+        --xxl: 1.875rem;
+        --display: 3rem;
+        --hero: 3.75rem;
+        --radius-sm: 0.375rem;
+        --radius: 0.75rem;
+        --radius-lg: 1.5rem;
+        --pill: 999px;
+        --target: 2.75rem;
+        --container: 86rem;
+        --tools-width: 21rem;
+        --stage-height: 33rem;
+        --line: 1px;
+        --ring: 2px;
+        --duration: 180ms;
+        --z-overlay: 5;
+        --z-dialog: 10;
+        --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        --mono: var(--sans);
+        --display-font: Georgia, serif;
+      }
+      html[data-theme="light"] {
+        --bg: #eeeee5;
+        --surface: #fafaf4;
+        --surface-alt: #e1e5d6;
+        --text: #20251b;
+        --muted: #515e43;
+        --border: #788168;
+        --accent: #354e1e;
+        --accent-hover: #263d11;
+        --on-accent: #ffffff;
+        --danger: #9c2c18;
+        --canvas-bg: #d8ddce;
+        --button-bg: var(--surface-alt);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: var(--base)/1.5 var(--sans);
+        -webkit-font-smoothing: antialiased;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+      button,
+      a,
+      input,
+      select {
+        -webkit-tap-highlight-color: transparent;
+      }
+      button,
+      select,
+      input[type="range"],
+      a,
+      summary {
+        cursor: pointer;
+      }
+      button {
+        min-height: var(--target);
+        padding: var(--s2) var(--s4);
+        border: var(--line) solid var(--border);
+        border-radius: var(--radius-sm);
+        background: var(--button-bg);
+        color: var(--text);
+        display: inline-flex;
+        gap: var(--s2);
+        align-items: center;
+        justify-content: center;
+        transition:
+          background var(--duration),
+          opacity var(--duration),
+          transform var(--duration);
+      }
+      button:hover:not(:disabled) {
+        background: var(--surface);
+        border-color: var(--accent);
+      }
+      button:active:not(:disabled) {
+        transform: translateY(1px);
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .primary {
+        background: var(--accent);
+        color: var(--on-accent);
+        border-color: var(--accent);
+        font-weight: 650;
+      }
+      .primary:hover:not(:disabled) {
+        background: var(--accent-hover);
+        color: var(--on-accent);
+      }
+      .quiet {
+        background: transparent;
+      }
+      .small {
+        font-size: var(--sm);
+      }
+      :focus-visible {
+        outline: var(--ring) solid var(--accent);
+        outline-offset: var(--s1);
+      }
+      a {
+        color: inherit;
+        text-underline-offset: var(--s1);
+      }
+      svg {
+        width: var(--lg);
+        height: var(--lg);
+        flex-shrink: 0;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      h1,
+      h2,
+      h3 {
+        line-height: 1.15;
+        text-wrap: balance;
+      }
+      h1 {
+        font-size: var(--display);
+        font-weight: 500;
+        letter-spacing: -0.055em;
+      }
+      h2 {
+        font-size: var(--lg);
+        font-weight: 600;
+      }
+      h3 {
+        font-size: var(--base);
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .eyebrow {
+        font: var(--xs)/1.5 var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+      }
+      .skip {
+        position: absolute;
+        top: var(--s2);
+        left: var(--s2);
+        transform: translateY(-200%);
+        z-index: var(--z-dialog);
+        background: var(--accent);
+        color: var(--on-accent);
+        padding: var(--s3);
+      }
+      .skip:focus {
+        transform: none;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      header,
+      main,
+      footer {
+        max-width: var(--container);
+        margin: auto;
+        padding-inline: var(--s4);
+      }
+      header {
+        min-height: var(--s24);
+        padding-block: var(--s4);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--s4);
+        border-bottom: var(--line) solid var(--border);
+      }
+      .brand {
+        font-size: var(--xxl);
+        font-weight: 750;
+        letter-spacing: -0.06em;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: var(--s3);
+      }
+      .brand-mark {
+        width: var(--s8);
+        height: var(--s8);
+        border: var(--ring) solid var(--accent);
+        border-radius: var(--radius-sm);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--s1);
+        padding: var(--s1);
+        transform: rotate(-8deg);
+      }
+      .brand-mark i {
+        background: var(--accent);
+      }
+      .brand-mark i:nth-child(2) {
+        opacity: 0.3;
+      }
+      .brand-mark i:nth-child(3) {
+        opacity: 0.6;
+      }
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--s3);
+      }
+      .privacy {
+        display: none;
+        align-items: center;
+        gap: var(--s2);
+        font-size: var(--sm);
+        color: var(--muted);
+      }
+      .dot {
+        width: var(--s2);
+        height: var(--s2);
+        border-radius: var(--pill);
+        background: var(--accent);
+        display: inline-block;
+      }
+      .intro {
+        padding: var(--s8) 0;
+        display: flex;
+        justify-content: space-between;
+        gap: var(--s6);
+        align-items: end;
+        flex-wrap: wrap;
+      }
+      .intro .eyebrow {
+        color: var(--muted);
+        margin-bottom: var(--s3);
+      }
+      h1 em {
+        font-family: var(--display-font);
+        font-weight: 400;
+        color: var(--accent);
+      }
+      .intro-copy {
+        max-width: 34ch;
+        color: var(--muted);
+        font-size: var(--sm);
+        line-height: 1.7;
+      }
+      .workspace {
+        display: grid;
+        gap: var(--s4);
+        align-items: start;
+      }
+      .preview {
+        border: var(--line) solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        background: var(--surface);
+        min-width: 0;
+      }
+      .toolbar {
+        padding: var(--s3);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--s2);
+        flex-wrap: wrap;
+        border-bottom: var(--line) solid var(--border);
+      }
+      .file-info {
+        display: flex;
+        align-items: center;
+        gap: var(--s3);
+        min-width: 0;
+      }
+      .file-info > svg {
+        color: var(--accent);
+      }
+      #file-name {
+        font-size: var(--sm);
+        font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 25ch;
+      }
+      #dimensions {
+        font: var(--xs)/1.5 var(--mono);
+        color: var(--muted);
+      }
+      .tools-inline {
+        display: flex;
+        gap: var(--s2);
+        align-items: center;
+      }
+      .tools-inline button {
+        padding: var(--s2);
+        min-width: var(--target);
+      }
+      .stage {
+        height: var(--stage-height);
+        overflow: auto;
+        display: flex;
+        position: relative;
+        background: var(--canvas-bg);
+        overscroll-behavior: contain;
+      }
+      .stage.dragover {
+        outline: var(--ring) dashed var(--accent);
+        outline-offset: calc(-1 * var(--s2));
+      }
+      .empty {
+        margin: auto;
+        padding: var(--s6);
+        text-align: center;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--s4);
+      }
+      .scan-art {
+        width: 11rem;
+        height: 8rem;
+        position: relative;
+        margin-bottom: var(--s3);
+        transform: rotate(-6deg);
+        background: var(--paper-200);
+        padding: var(--s2);
+        border-radius: var(--s1);
+      }
+      .scan-art:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--paper-200);
+        transform: rotate(12deg);
+        opacity: 0.25;
+      }
+      .scan-art svg {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        stroke: none;
+        fill: none;
+      }
+      .empty h2 {
+        font-size: var(--xl);
+        font-weight: 500;
+      }
+      .empty p {
+        max-width: 37ch;
+        font-size: var(--sm);
+        color: var(--muted);
+      }
+      .empty-actions {
+        display: flex;
+        gap: var(--s3);
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .file-hint {
+        font: var(--xs)/1.6 var(--mono);
+        color: var(--muted);
+      }
+      #frame {
+        position: relative;
+        flex-shrink: 0;
+        margin: auto;
+        line-height: 0;
+        touch-action: none;
+        outline-offset: calc(-1 * var(--ring));
+        user-select: none;
+      }
+      #frame canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        inset: 0;
+      }
+      #frame #before {
+        clip-path: inset(0 50% 0 0);
+      }
+      #overlay {
+        z-index: 2;
+      }
+      #divider {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: var(--ring);
+        background: var(--paper-50);
+        left: 50%;
+        pointer-events: none;
+        z-index: 3;
+      }
+      #divider:after {
+        content: "↔";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: var(--pill);
+        width: var(--s8);
+        height: var(--s8);
+        display: grid;
+        place-items: center;
+        font-size: var(--lg);
+        line-height: 1;
+        background: var(--paper-50);
+        color: var(--ink-950);
+      }
+      .compare-bar {
+        display: flex;
+        align-items: center;
+        gap: var(--s3);
+        padding: var(--s3) var(--s4);
+        font: var(--xs)/1.5 var(--mono);
+        border-top: var(--line) solid var(--border);
+      }
+      input[type="range"] {
+        accent-color: var(--accent);
+        min-height: var(--target);
+        width: 100%;
+        min-width: 0;
+      }
+      .compare-bar input {
+        flex: 1;
+      }
+      .status-area {
+        padding: var(--s3) var(--s4);
+        border-top: var(--line) solid var(--border);
+        min-height: var(--s16);
+      }
+      #status {
+        font-size: var(--sm);
+        color: var(--muted);
+      }
+      #status.error {
+        color: var(--danger);
+      }
+      .progress-row {
+        display: flex;
+        align-items: center;
+        gap: var(--s3);
+        margin-top: var(--s2);
+      }
+      progress {
+        width: 100%;
+        height: var(--s2);
+        accent-color: var(--accent);
+      }
+      .progress-row button {
+        font-size: var(--sm);
+      }
+      .controls {
+        border: var(--line) solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+        overflow: hidden;
+        min-width: 0;
+      }
+      .controls-header {
+        padding: var(--s4) var(--s6);
+        border-bottom: var(--line) solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .tag {
+        font: var(--xs)/1.5 var(--mono);
+        padding: var(--s1) var(--s2);
+        border: var(--line) solid var(--border);
+        border-radius: var(--pill);
+        color: var(--muted);
+      }
+      .tabs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding: var(--s3);
+        gap: var(--s2);
+        border-bottom: var(--line) solid var(--border);
+      }
+      .tabs button {
+        font-size: var(--sm);
+        background: transparent;
+        padding: var(--s2);
+        border-color: transparent;
+        gap: var(--s1);
+      }
+      .tabs button[aria-selected="true"] {
+        background: var(--surface-alt);
+        border-color: var(--border);
+        color: var(--accent);
+      }
+      .panel {
+        padding: var(--s6);
+        display: flex;
+        flex-direction: column;
+        gap: var(--s4);
+      }
+      .panel > p,
+      .help {
+        color: var(--muted);
+        font-size: var(--sm);
+        line-height: 1.6;
+      }
+      .control {
+        display: flex;
+        flex-direction: column;
+        gap: var(--s2);
+      }
+      .control > label,
+      .control-label {
+        display: flex;
+        justify-content: space-between;
+        gap: var(--s3);
+        font-size: var(--sm);
+        font-weight: 550;
+      }
+      .control label span {
+        font: var(--xs)/1.5 var(--mono);
+        color: var(--muted);
+      }
+      select,
+      input[type="number"],
+      textarea {
+        min-height: var(--target);
+        background: var(--canvas-bg);
+        color: var(--text);
+        border: var(--line) solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: var(--s2) var(--s3);
+        width: 100%;
+        min-width: 0;
+      }
+      textarea {
+        resize: vertical;
+        min-height: var(--s24);
+        font-size: var(--sm);
+      }
+      .panel hr {
+        width: 100%;
+        margin: var(--s1) 0;
+        border: 0;
+        border-top: var(--line) solid var(--border);
+      }
+      .row {
+        display: flex;
+        gap: var(--s2);
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .row > button {
+        flex: 1;
+      }
+      .mode button[aria-pressed="true"] {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+      .mode-note {
+        border-left: var(--ring) solid var(--accent);
+        padding-left: var(--s3);
+        font-size: var(--sm);
+        color: var(--muted);
+      }
+      .numeric-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--s3);
+      }
+      .numeric-grid label {
+        display: block;
+        font-size: var(--xs);
+        color: var(--muted);
+        margin-bottom: var(--s1);
+      }
+      details {
+        font-size: var(--sm);
+      }
+      summary {
+        min-height: var(--target);
+        display: flex;
+        align-items: center;
+        gap: var(--s2);
+        text-decoration: underline;
+        text-underline-offset: var(--s1);
+      }
+      .export {
+        padding: var(--s4) var(--s6);
+        background: var(--surface-alt);
+        border-top: var(--line) solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: var(--s3);
+      }
+      .export .row {
+        flex-wrap: nowrap;
+      }
+      .export select {
+        flex: 1;
+        width: 35%;
+      }
+      .export button {
+        flex: 2;
+      }
+      .guide {
+        display: grid;
+        gap: var(--s6);
+        margin: var(--s8) 0;
+      }
+      .guide-item {
+        border-top: var(--line) solid var(--border);
+        padding-top: var(--s4);
+        display: flex;
+        align-items: start;
+        gap: var(--s4);
+      }
+      .guide-number {
+        font: var(--xs)/1.5 var(--mono);
+        color: var(--accent);
+      }
+      .guide-item h3 {
+        font-weight: 500;
+        margin-bottom: var(--s2);
+      }
+      .guide-item p {
+        color: var(--muted);
+        font-size: var(--sm);
+        max-width: 42ch;
+      }
+      footer {
+        border-top: var(--line) solid var(--border);
+        padding-top: var(--s6);
+        padding-bottom: var(--s6);
+        display: flex;
+        justify-content: space-between;
+        gap: var(--s4);
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: var(--xs);
+      }
+      footer nav {
+        display: flex;
+        gap: var(--s4);
+        align-items: center;
+      }
+      dialog {
+        background: var(--surface);
+        color: var(--text);
+        border: var(--line) solid var(--border);
+        border-radius: var(--radius);
+        padding: var(--s6);
+        max-width: 38rem;
+        width: calc(100% - var(--s8));
+        max-height: 85vh;
+        overflow: auto;
+      }
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.7);
+      }
+      dialog h2 {
+        margin-bottom: var(--s4);
+      }
+      dialog p {
+        margin-bottom: var(--s4);
+        color: var(--muted);
+        font-size: var(--sm);
+      }
+      dialog .close-row {
+        display: flex;
+        justify-content: end;
+        margin-top: var(--s6);
+      }
+      .key {
+        font: var(--xs) var(--mono);
+        border: var(--line) solid var(--border);
+        border-radius: var(--s1);
+        padding: var(--s1);
+      }
+      noscript {
+        display: block;
+        padding: var(--s6);
+        color: var(--danger);
+      }
+      @media (min-width: 640px) {
+        header,
+        main,
+        footer {
+          padding-inline: var(--s8);
+        }
+        .privacy {
+          display: flex;
+        }
+        h1 {
+          font-size: var(--hero);
+        }
+        .guide {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (min-width: 1024px) {
+        .workspace {
+          grid-template-columns: minmax(0, 1fr) var(--tools-width);
+          gap: var(--s6);
+        }
+        .intro {
+          padding-block: var(--s8) var(--s12);
+        }
+        .tabs {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .intro-copy {
+          font-size: var(--base);
+        }
+        .guide {
+          margin-block: var(--s8) var(--s12);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+          animation: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#workspace">Skip to editor</a>
+    <svg class="sr-only" aria-hidden="true">
+      <defs>
+        <symbol id="i-upload" viewBox="0 0 24 24">
+          <path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5" />
+        </symbol>
+        <symbol id="i-image" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="3" />
+          <circle cx="8" cy="8" r="1.5" />
+          <path d="m3 17 6-6 4 4 4-5 4 5" />
+        </symbol>
+        <symbol id="i-undo" viewBox="0 0 24 24">
+          <path d="M9 5 4 10l5 5M4 10h10a6 6 0 0 1 0 12" />
+        </symbol>
+        <symbol id="i-redo" viewBox="0 0 24 24">
+          <path d="m15 5 5 5-5 5m5-5H10a6 6 0 0 0 0 12" />
+        </symbol>
+        <symbol id="i-download" viewBox="0 0 24 24">
+          <path d="M12 3v13m-5-5 5 5 5-5M4 17v4h16v-4" />
+        </symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4" />
+          <path
+            d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1 1m12 12 1 1M5 19l1-1M18 6l1-1"
+          />
+        </symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24">
+          <path d="M12 5v14M5 12h14" />
+        </symbol>
+        <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" /></symbol>
+        <symbol id="i-brush" viewBox="0 0 24 24">
+          <path d="m14 12 7-9-2-1-9 8 4 2ZM10 12c-6-2-3 6-8 7 7 3 12-2 8-7Z" />
+        </symbol>
+      </defs>
+    </svg>
+    <header>
+      <a class="brand" href="#" aria-label="Depix home"
+        ><span class="brand-mark" aria-hidden="true"
+          ><i></i><i></i><i></i><i></i></span
+        >depix<span class="muted">.</span></a
+      >
+      <div class="header-actions">
+        <span class="privacy"
+          ><span class="dot"></span>On your device. Only.</span
+        ><button type="button" class="quiet" id="help-button">
+          How it works</button
+        ><button
+          type="button"
+          class="quiet"
+          id="theme"
+          aria-label="Switch to light theme"
+        >
+          <svg aria-hidden="true"><use href="#i-sun" /></svg>
+        </button>
+      </div>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="title">
+        <div>
+          <p class="eyebrow">THE PHOTO RESTORATION WORKSPACE</p>
+          <h1 id="title">A little care.<br />A <em>clearer</em> memory.</h1>
+        </div>
+        <p class="intro-copy">
+          Less blur. Fewer scratches. More of what matters.<br />Restore your
+          images right here, without sending them anywhere.
+        </p>
+      </section>
+      <div id="workspace" class="workspace">
+        <section class="preview" aria-label="Image editor">
+          <div class="toolbar">
+            <div class="file-info">
+              <svg aria-hidden="true"><use href="#i-image" /></svg>
+              <div>
+                <div id="file-name">Your next restoration</div>
+                <div id="dimensions">NO IMAGE LOADED</div>
+              </div>
+            </div>
+            <div class="tools-inline">
+              <button
+                type="button"
+                class="quiet"
+                id="upload-top"
+                aria-label="Upload or replace image"
+              >
+                <svg aria-hidden="true"><use href="#i-upload" /></svg></button
+              ><button
+                type="button"
+                id="undo"
+                disabled
+                aria-label="Undo last edit"
+                title="Undo (Ctrl/Cmd+Z)"
+              >
+                <svg aria-hidden="true"><use href="#i-undo" /></svg></button
+              ><button
+                type="button"
+                id="redo"
+                disabled
+                aria-label="Redo last edit"
+                title="Redo (Ctrl/Cmd+Shift+Z)"
+              >
+                <svg aria-hidden="true"><use href="#i-redo" /></svg></button
+              ><button type="button" class="small quiet" id="reset" disabled>
+                Reset
+              </button>
+            </div>
+          </div>
+          <div class="stage" id="stage">
+            <div class="empty" id="empty">
+              <div class="scan-art" aria-hidden="true">
+                <svg viewBox="0 0 160 105">
+                  <rect width="160" height="105" fill="#8b9b89" />
+                  <circle cx="120" cy="28" r="13" fill="#d9d5ad" />
+                  <path
+                    d="M0 78 45 21 83 67 109 43 160 87v18H0Z"
+                    fill="#4a6657"
+                  />
+                  <path d="m25 46 20-25 20 25-20-10Z" fill="#c6cabb" />
+                  <path d="M0 85q65-14 160 1v19H0Z" fill="#859d94" />
+                  <path
+                    d="m58 0 3 105m58-105-3 105"
+                    stroke="#d5d8c9"
+                    stroke-width="1"
+                    opacity=".5"
+                  />
+                </svg>
+              </div>
+              <p class="eyebrow">GOOD PHOTOS DESERVE A SECOND CHANCE</p>
+              <h2>Start with a memory.</h2>
+              <p>
+                Drop an image here, choose a file, or paste an image from your
+                clipboard.
+              </p>
+              <div class="empty-actions">
+                <button type="button" class="primary" id="upload">
+                  <svg aria-hidden="true"><use href="#i-upload" /></svg>Choose
+                  image</button
+                ><button type="button" class="quiet" id="sample">
+                  Try a sample
+                </button>
+              </div>
+              <span class="file-hint"
+                >JPG, PNG, WEBP, BMP · UP TO 25 MB<br />Large images are resized
+                with your permission.</span
+              >
+            </div>
+            <div
+              id="frame"
+              hidden
+              tabindex="0"
+              role="img"
+              aria-label="Image comparison. Use comparison slider below. In brush mode, arrow keys move the brush and Space paints."
+            >
+              <canvas id="after"></canvas><canvas id="before"></canvas
+              ><canvas id="overlay"></canvas>
+              <div id="divider"></div>
+            </div>
+          </div>
+          <div class="toolbar" id="view-toolbar">
+            <div class="tools-inline">
+              <button
+                type="button"
+                id="zoom-out"
+                disabled
+                aria-label="Zoom out"
+              >
+                <svg aria-hidden="true"><use href="#i-minus" /></svg></button
+              ><button type="button" id="zoom-fit" class="small quiet" disabled>
+                Fit</button
+              ><button type="button" id="zoom-in" disabled aria-label="Zoom in">
+                <svg aria-hidden="true"><use href="#i-plus" /></svg></button
+              ><span id="zoom-label" class="tag">FIT</span>
+            </div>
+            <span id="view-mode" class="eyebrow muted">BEFORE / AFTER</span>
+          </div>
+          <div class="compare-bar">
+            <span>Original</span
+            ><input
+              type="range"
+              id="compare"
+              min="0"
+              max="100"
+              value="50"
+              aria-label="Original and restored comparison"
+              disabled
+            /><span>Restored</span>
+          </div>
+          <div class="status-area">
+            <p id="status" role="status" aria-live="polite">
+              Ready when you are. Your images never leave this browser.
+            </p>
+            <div id="progress-row" class="progress-row" hidden>
+              <progress
+                id="progress"
+                max="100"
+                value="0"
+                aria-label="Processing progress"
+              ></progress
+              ><button type="button" id="cancel" class="quiet">Cancel</button>
+            </div>
+            <button type="button" id="retry" class="small quiet" hidden>
+              Retry last action
+            </button>
+          </div>
+        </section>
+        <aside class="controls" aria-label="Restoration tools">
+          <div class="controls-header">
+            <h2>The toolkit</h2>
+            <span class="tag">LOCAL ENGINE</span>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Restoration tools">
+            <button
+              type="button"
+              role="tab"
+              id="tab-enhance"
+              aria-controls="panel-enhance"
+              aria-selected="true"
+              data-tab="enhance"
+            >
+              Enhance</button
+            ><button
+              type="button"
+              role="tab"
+              id="tab-repair"
+              aria-controls="panel-repair"
+              aria-selected="false"
+              tabindex="-1"
+              data-tab="repair"
+            >
+              Repair</button
+            ><button
+              type="button"
+              role="tab"
+              id="tab-text"
+              aria-controls="panel-text"
+              aria-selected="false"
+              tabindex="-1"
+              data-tab="text"
+            >
+              Read text
+            </button>
+          </div>
+          <div
+            class="panel"
+            id="panel-enhance"
+            role="tabpanel"
+            aria-labelledby="tab-enhance"
+          >
+            <p>
+              Small adjustments. A real difference. Apply one tool at a time.
+            </p>
+            <div class="control">
+              <label for="blur-type">Blur type</label
+              ><select id="blur-type">
+                <option value="focus">Out of focus</option>
+                <option value="motion">Motion blur</option>
+                <option value="sharpen">Sharpen only</option>
+              </select>
+            </div>
+            <div class="control">
+              <label for="strength"
+                >Strength <span id="strength-value">40%</span></label
+              ><input
+                id="strength"
+                type="range"
+                min="10"
+                max="100"
+                value="40"
+              />
+            </div>
+            <div class="control" id="angle-control" hidden>
+              <label for="angle"
+                >Motion angle <span id="angle-value">0°</span></label
+              ><input id="angle" type="range" min="0" max="180" value="0" />
+            </div>
+            <button type="button" id="deblur" data-image disabled>
+              Deblur &amp; sharpen
+            </button>
+            <div class="control">
+              <label for="noise"
+                >Noise reduction <span id="noise-value">35%</span></label
+              ><input id="noise" type="range" min="10" max="100" value="35" />
+            </div>
+            <button type="button" id="denoise" data-image disabled>
+              Reduce noise
+            </button>
+            <hr />
+            <div>
+              <h3>Bring back the color</h3>
+              <p class="help">
+                Correct faded contrast and color casts. Not AI colorization.
+              </p>
+            </div>
+            <div class="control">
+              <label for="color"
+                >Restoration strength <span id="color-value">60%</span></label
+              ><input id="color" type="range" min="10" max="100" value="60" />
+            </div>
+            <button type="button" id="restore" data-image disabled>
+              Restore old photo
+            </button>
+            <hr />
+            <div>
+              <h3>A little more room</h3>
+              <p class="help">
+                Smooth 2× or 4× enlargement. Classic interpolation, not invented
+                detail.
+              </p>
+            </div>
+            <div class="row">
+              <button type="button" id="upscale2" data-image disabled>
+                Upscale 2×</button
+              ><button type="button" id="upscale4" data-image disabled>
+                Upscale 4×
+              </button>
+            </div>
+            <button
+              type="button"
+              id="fit4"
+              class="quiet small"
+              data-image
+              disabled
+            >
+              Resize for safe 4×
+            </button>
+          </div>
+          <div
+            class="panel"
+            id="panel-repair"
+            role="tabpanel"
+            aria-labelledby="tab-repair"
+            hidden
+          >
+            <h3>Mend the little imperfections.</h3>
+            <p>
+              Paint over thin scratches, stains, or small damaged spots. Fill
+              uses surrounding colors. Work in small passes.
+            </p>
+            <div class="row mode">
+              <button
+                type="button"
+                id="paint"
+                aria-pressed="false"
+                data-image
+                disabled
+              >
+                <svg aria-hidden="true"><use href="#i-brush" /></svg
+                >Paint</button
+              ><button
+                type="button"
+                id="erase"
+                aria-pressed="false"
+                data-image
+                disabled
+              >
+                Erase mask
+              </button>
+            </div>
+            <div class="control">
+              <label for="brush"
+                >Brush size <span id="brush-value">20 px</span></label
+              ><input id="brush" type="range" min="2" max="100" value="20" />
+            </div>
+            <p class="mode-note">
+              Mask is lime. Only marked pixels change. Touch or drag on the
+              image; zoom in for precision.
+            </p>
+            <details>
+              <summary>Keyboard &amp; precise selection</summary>
+              <p class="help">
+                Focus the image. Arrow keys move the cursor; Space paints or
+                erases. Shift + arrows move faster. Or mark a rectangle in image
+                pixels below.
+              </p>
+              <div class="numeric-grid">
+                <div>
+                  <label for="repair-x">Left (px)</label
+                  ><input id="repair-x" type="number" min="0" value="0" />
+                </div>
+                <div>
+                  <label for="repair-y">Top (px)</label
+                  ><input id="repair-y" type="number" min="0" value="0" />
+                </div>
+                <div>
+                  <label for="repair-w">Width (px)</label
+                  ><input id="repair-w" type="number" min="1" value="20" />
+                </div>
+                <div>
+                  <label for="repair-h">Height (px)</label
+                  ><input id="repair-h" type="number" min="1" value="20" />
+                </div>
+              </div>
+              <button type="button" id="mark-rectangle" data-image disabled>
+                Mark rectangle
+              </button>
+            </details>
+            <div class="row">
+              <button type="button" id="clear-mask" data-image disabled>
+                Clear mask</button
+              ><button
+                type="button"
+                id="repair"
+                class="primary"
+                data-image
+                disabled
+              >
+                Fill damage
+              </button>
+            </div>
+            <p class="help">
+              Large missing objects and faces need a human retoucher. This tool
+              does not generate new objects.
+            </p>
+          </div>
+          <div
+            class="panel"
+            id="panel-text"
+            role="tabpanel"
+            aria-labelledby="tab-text"
+            hidden
+          >
+            <h3>Make the small print readable.</h3>
+            <p>
+              Select a text area, clean its contrast, then read it with
+              on-device OCR.
+            </p>
+            <button
+              type="button"
+              id="select-text"
+              aria-pressed="false"
+              data-image
+              disabled
+            >
+              Select text area
+            </button>
+            <div class="numeric-grid">
+              <div>
+                <label for="text-x">Left (px)</label
+                ><input id="text-x" type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label for="text-y">Top (px)</label
+                ><input id="text-y" type="number" min="0" value="0" />
+              </div>
+              <div>
+                <label for="text-w">Width (px)</label
+                ><input id="text-w" type="number" min="1" value="200" />
+              </div>
+              <div>
+                <label for="text-h">Height (px)</label
+                ><input id="text-h" type="number" min="1" value="80" />
+              </div>
+            </div>
+            <div class="row">
+              <button type="button" id="set-text-region" data-image disabled>
+                Set area</button
+              ><button
+                type="button"
+                id="whole-text"
+                class="quiet"
+                data-image
+                disabled
+              >
+                Whole image
+              </button>
+            </div>
+            <p id="region-info" class="help">
+              No selection. OCR uses the whole image.
+            </p>
+            <div class="control">
+              <label for="threshold">Text cleanup</label
+              ><select id="threshold">
+                <option value="contrast">Grayscale + contrast</option>
+                <option value="binary">Adaptive black &amp; white</option>
+              </select>
+            </div>
+            <button type="button" id="clean-text" data-image disabled>
+              Enhance text area
+            </button>
+            <div class="control">
+              <label for="language">OCR language</label
+              ><select id="language">
+                <option value="eng">English</option>
+                <option value="spa">Spanish</option>
+                <option value="fra">French</option>
+                <option value="deu">German</option>
+              </select>
+            </div>
+            <button type="button" id="ocr" class="primary" data-image disabled>
+              Read text with OCR</button
+            ><label for="ocr-output" class="control-label"
+              >Detected text <span id="confidence" class="muted"></span></label
+            ><textarea
+              id="ocr-output"
+              readonly
+              placeholder="Detected text will appear here."
+            ></textarea
+            ><button type="button" id="copy" disabled>
+              Copy detected text
+            </button>
+            <p class="help">
+              OCR downloads free Tesseract.js and language files on first use.
+              Your image stays local. Verify every word, especially numbers.
+            </p>
+          </div>
+          <div class="export">
+            <div class="control">
+              <label for="format">Save your restoration</label>
+              <div class="row">
+                <select id="format">
+                  <option value="png">PNG</option>
+                  <option value="jpg">JPG</option></select
+                ><button
+                  type="button"
+                  id="download"
+                  class="primary"
+                  data-image
+                  disabled
+                >
+                  <svg aria-hidden="true"><use href="#i-download" /></svg
+                  >Download
+                </button>
+              </div>
+            </div>
+            <p class="help">Full working resolution. No watermark.</p>
+          </div>
+        </aside>
+      </div>
+      <section class="guide" aria-label="A better restoration workflow">
+        <div class="guide-item">
+          <span class="guide-number">01 /</span>
+          <div>
+            <h3>Repair, then refine.</h3>
+            <p>
+              Fill scratches first, reduce noise next, and sharpen gently.
+              Enlarge last.
+            </p>
+          </div>
+        </div>
+        <div class="guide-item">
+          <span class="guide-number">02 /</span>
+          <div>
+            <h3>Keep the original close.</h3>
+            <p>
+              Slide to compare. Zoom to check the details. Every edit can be
+              undone.
+            </p>
+          </div>
+        </div>
+        <div class="guide-item">
+          <span class="guide-number">03 /</span>
+          <div>
+            <h3>Honest about the pixels.</h3>
+            <p>
+              Restoration can reveal existing detail. It cannot recover
+              information that is truly gone.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <span>DEPIX / A little care goes a long way.</span>
+      <nav aria-label="Footer">
+        <button type="button" class="quiet small" id="privacy-button">
+          Privacy &amp; terms</button
+        ><a
+          href="https://github.com/arbabtalha/Depix"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Open source ↗</a
+        ><span>MIT LICENSE</span>
+      </nav>
+    </footer>
+    <input
+      type="file"
+      id="file-input"
+      accept="image/png,image/jpeg,image/webp,image/bmp"
+      hidden
+    />
+    <dialog id="help-dialog" aria-labelledby="help-title">
+      <h2 id="help-title">From a scan to a clearer memory.</h2>
+      <p>
+        1. Choose an image, drop it in the editor, or paste with Ctrl/Cmd + V.
+        Try the sample if you want to explore.
+      </p>
+      <p>
+        2. Repair: paint a small damaged area, then Fill damage. Erase mask or
+        Clear mask to correct your selection.
+      </p>
+      <p>
+        3. Enhance: choose the blur type and strength. Reduce noise, correct
+        faded color, then upscale. Each button applies one edit.
+      </p>
+      <p>
+        4. Read text: select an area or enter its coordinates. Enhance text area
+        changes those pixels. Read text with OCR also cleans and enlarges a
+        private crop before recognition.
+      </p>
+      <p>
+        5. Compare with the slider. Zoom, undo, redo, or reset. Download PNG for
+        lossless output or JPG for a smaller file.
+      </p>
+      <p>
+        <span class="key">Ctrl/Cmd + Z</span> undo ·
+        <span class="key">Ctrl/Cmd + Shift + Z</span> redo. Use Tab to navigate;
+        arrow keys switch tool tabs and adjust sliders. Brush keyboard controls
+        are in Repair.
+      </p>
+      <p>
+        Limits: 25 MB per file, 60 megapixels decoded, 1.5 megapixels working
+        input, 6 megapixels output. Undo keeps at most 48 MB of pixel history.
+        Closing this tab discards your work.
+      </p>
+      <div class="close-row">
+        <button type="button" data-close>Back to the editor</button>
+      </div>
+    </dialog>
+    <dialog id="privacy-dialog" aria-labelledby="privacy-title">
+      <h2 id="privacy-title">Private by design.</h2>
+      <p>
+        Your image is processed with Canvas and a local Web Worker. Depix does
+        not send image pixels or detected text to a server, use analytics, or
+        store your images.
+      </p>
+      <p>
+        Only OCR needs the internet: jsDelivr supplies open-source code and
+        trained language data. Those providers receive normal connection
+        metadata, such as your IP address, but not your image. OCR language
+        files may be cached by your browser.
+      </p>
+      <p>
+        Use only images you own or have permission to edit. Keep your originals.
+        OCR and restoration can be wrong. Do not treat enhanced text as proof or
+        an accurate record.
+      </p>
+      <p>
+        This app uses classic restoration, not generative photo AI. Generative
+        AI tools elsewhere can add details that were never in the original. No
+        restoration can recover detail that is truly lost.
+      </p>
+      <p>
+        Depix is free software under the MIT license, provided as-is without
+        warranty. PNG retains transparency. JPG flattens it onto white. Image
+        metadata is not retained.
+      </p>
+      <div class="close-row">
+        <button type="button" data-close>Close</button>
+      </div>
+    </dialog>
+    <noscript
+      >Depix needs JavaScript to process images locally. Enable JavaScript, then
+      reload this page. No images are uploaded to a server.</noscript
+    >
+    <!-- This worker is kept inline so index.html is the complete application. -->
+    <script id="worker-code" type="text/plain">
+      "use strict";
+      const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+      function report(p) {
+        postMessage({ progress: p });
+      }
+      function convolve(src, w, h, k) {
+        const dst = new Float32Array(src.length);
+        for (let y = 0; y < h; y++)
+          for (let x = 0; x < w; x++) {
+            let v = 0;
+            for (const [dx, dy, a] of k)
+              v += src[clamp(y + dy, 0, h - 1) * w + clamp(x + dx, 0, w - 1)] * a;
+            dst[y * w + x] = v;
+          }
+        return dst;
+      }
+      function sharpen(data, w, h, amount) {
+        const k = [
+          [0, 0, 0.25],
+          [-1, 0, 0.125],
+          [1, 0, 0.125],
+          [0, -1, 0.125],
+          [0, 1, 0.125],
+          [-1, -1, 0.0625],
+          [1, -1, 0.0625],
+          [-1, 1, 0.0625],
+          [1, 1, 0.0625],
+        ];
+        const out = new Uint8ClampedArray(data);
+        for (let c = 0; c < 3; c++) {
+          const src = Float32Array.from({ length: w * h }, (_, i) => data[i * 4 + c]);
+          const smooth = convolve(src, w, h, k);
+          for (let i = 0; i < src.length; i++)
+            out[i * 4 + c] = src[i] + amount * (src[i] - smooth[i]);
+        }
+        return out;
+      }
+      function deblur(data, w, h, o) {
+        if (o.kind === "sharpen") return sharpen(data, w, h, o.strength * 1.8);
+        const n = w * h,
+          src = new Float32Array(n);
+        for (let i = 0; i < n; i++)
+          src[i] = Math.max(
+            1,
+            0.2126 * data[i * 4] +
+              0.7152 * data[i * 4 + 1] +
+              0.0722 * data[i * 4 + 2],
+          );
+        let k = [];
+        const radius = o.strength > 0.65 ? 2 : 1;
+        if (o.kind === "motion") {
+          const theta = (o.angle * Math.PI) / 180;
+          const points = new Map();
+          for (let t = -radius * 2; t <= radius * 2; t++) {
+            const dx = Math.round(t * Math.cos(theta)),
+              dy = Math.round(t * Math.sin(theta));
+            points.set(dx + "," + dy, [dx, dy, 1]);
+          }
+          k = [...points.values()];
+        } else {
+          for (let dy = -radius; dy <= radius; dy++)
+            for (let dx = -radius; dx <= radius; dx++)
+              if (dx * dx + dy * dy <= radius * radius) k.push([dx, dy, 1]);
+        }
+        k = k.map(([x, y]) => [x, y, 1 / k.length]);
+        const reverse = k.map(([x, y, a]) => [-x, -y, a]);
+        let estimate = new Float32Array(src);
+        const iterations = 3 + Math.round(o.strength * 5);
+        for (let it = 0; it < iterations; it++) {
+          const blurred = convolve(estimate, w, h, k),
+            ratio = new Float32Array(n);
+          for (let i = 0; i < n; i++)
+            ratio[i] = clamp(src[i] / Math.max(1, blurred[i]), 0.5, 2);
+          const correction = convolve(ratio, w, h, reverse);
+          for (let i = 0; i < n; i++)
+            estimate[i] = clamp(estimate[i] * correction[i], 0, 255);
+          report(10 + (it / iterations) * 75);
+        }
+        const out = new Uint8ClampedArray(data);
+        for (let i = 0; i < n; i++) {
+          const scale = clamp(estimate[i] / src[i], 0.5, 2);
+          for (let c = 0; c < 3; c++)
+            out[i * 4 + c] = data[i * 4 + c] * (1 + o.strength * (scale - 1));
+        }
+        return sharpen(out, w, h, 0.25 * o.strength);
+      }
+      function denoise(data, w, h, strength) {
+        const out = new Uint8ClampedArray(data),
+          sigma = 10 + strength * 55,
+          range = 2 * sigma * sigma;
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const p = (y * w + x) * 4;
+            let sums = [0, 0, 0],
+              weight = 0;
+            for (let dy = -1; dy <= 1; dy++)
+              for (let dx = -1; dx <= 1; dx++) {
+                const q = (clamp(y + dy, 0, h - 1) * w + clamp(x + dx, 0, w - 1)) * 4;
+                const diff =
+                  (data[p] - data[q]) ** 2 +
+                  (data[p + 1] - data[q + 1]) ** 2 +
+                  (data[p + 2] - data[q + 2]) ** 2;
+                const a = Math.exp(-diff / range - (dx * dx + dy * dy) / 2);
+                weight += a;
+                for (let c = 0; c < 3; c++) sums[c] += data[q + c] * a;
+              }
+            for (let c = 0; c < 3; c++)
+              out[p + c] =
+                data[p + c] * (1 - strength) + (sums[c] / weight) * strength;
+          }
+          if (y % 32 === 0) report(5 + (y / h) * 85);
+        }
+        return out;
+      }
+      function restore(data, w, h, strength) {
+        const hist = Array.from({ length: 3 }, () => new Uint32Array(256));
+        let count = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          if (data[i + 3] < 128) continue;
+          count++;
+          for (let c = 0; c < 3; c++) hist[c][data[i + c]]++;
+        }
+        const bounds = hist.map((a) => {
+          let sum = 0,
+            lo = 0,
+            hi = 255;
+          for (let i = 0; i < 256; i++) {
+            sum += a[i];
+            if (sum > count * 0.01) {
+              lo = i;
+              break;
+            }
+          }
+          sum = 0;
+          for (let i = 255; i >= 0; i--) {
+            sum += a[i];
+            if (sum > count * 0.01) {
+              hi = i;
+              break;
+            }
+          }
+          return [lo, Math.max(lo + 16, hi)];
+        });
+        const out = new Uint8ClampedArray(data);
+        for (let i = 0; i < data.length; i += 4)
+          for (let c = 0; c < 3; c++) {
+            const [lo, hi] = bounds[c];
+            const v = clamp(((data[i + c] - lo) * 255) / (hi - lo), 0, 255);
+            out[i + c] = data[i + c] * (1 - strength) + v * strength;
+          }
+        report(90);
+        return out;
+      }
+      function clean(data, w, h, o) {
+        const r = o.region || { x: 0, y: 0, w, h },
+          out = new Uint8ClampedArray(data),
+          gray = new Float32Array(r.w * r.h);
+        for (let y = 0; y < r.h; y++)
+          for (let x = 0; x < r.w; x++) {
+            const p = ((y + r.y) * w + x + r.x) * 4;
+            gray[y * r.w + x] =
+              0.299 * data[p] + 0.587 * data[p + 1] + 0.114 * data[p + 2];
+          }
+        const integral = new Float64Array((r.w + 1) * (r.h + 1));
+        for (let y = 1; y <= r.h; y++) {
+          let sum = 0;
+          for (let x = 1; x <= r.w; x++) {
+            sum += gray[(y - 1) * r.w + x - 1];
+            integral[y * (r.w + 1) + x] = integral[(y - 1) * (r.w + 1) + x] + sum;
+          }
+        }
+        for (let y = 0; y < r.h; y++)
+          for (let x = 0; x < r.w; x++) {
+            const p = ((y + r.y) * w + x + r.x) * 4,
+              g = gray[y * r.w + x];
+            let v = clamp((g - 128) * 1.6 + 128, 0, 255);
+            if (o.threshold === "binary") {
+              const x1 = Math.max(0, x - 10),
+                y1 = Math.max(0, y - 10),
+                x2 = Math.min(r.w, x + 11),
+                y2 = Math.min(r.h, y + 11),
+                stride = r.w + 1;
+              const mean =
+                (integral[y2 * stride + x2] -
+                  integral[y1 * stride + x2] -
+                  integral[y2 * stride + x1] +
+                  integral[y1 * stride + x1]) /
+                ((x2 - x1) * (y2 - y1));
+              v = g < mean - 8 ? 0 : 255;
+            }
+            out[p] = out[p + 1] = out[p + 2] = v;
+          }
+        report(90);
+        return out;
+      }
+      function repair(data, w, h, mask) {
+        const n = w * h,
+          known = new Uint8Array(n),
+          out = new Uint8ClampedArray(data),
+          queue = new Int32Array(n);
+        let tail = 0,
+          head = 0,
+          marked = 0;
+        for (let i = 0; i < n; i++) {
+          known[i] = mask[i] ? 0 : 1;
+          if (mask[i]) marked++;
+        }
+        if (!marked)
+          throw Error("Paint over a scratch first, then choose Fill damage.");
+        if (marked > n * 0.2)
+          throw Error(
+            "The mask covers more than 20% of the image. Clear it and repair smaller areas.",
+          );
+        const neighbors = (i) => {
+          const x = i % w,
+            y = Math.floor(i / w),
+            a = [];
+          if (x) a.push(i - 1);
+          if (x < w - 1) a.push(i + 1);
+          if (y) a.push(i - w);
+          if (y < h - 1) a.push(i + w);
+          return a;
+        };
+        for (let i = 0; i < n; i++)
+          if (!known[i] && neighbors(i).some((j) => known[j] === 1)) {
+            queue[tail++] = i;
+            known[i] = 2;
+          }
+        while (head < tail) {
+          const i = queue[head++],
+            near = neighbors(i).filter((j) => known[j] === 1);
+          if (!near.length)
+            throw Error(
+              "No surrounding pixels available. Clear the mask and select a smaller area.",
+            );
+          for (let c = 0; c < 4; c++) {
+            let sum = 0;
+            for (const j of near) sum += out[j * 4 + c];
+            out[i * 4 + c] = sum / near.length;
+          }
+          known[i] = 1;
+          for (const j of neighbors(i))
+            if (known[j] === 0) {
+              known[j] = 2;
+              queue[tail++] = j;
+            }
+          if (head % 4096 === 0) report(10 + (head / marked) * 55);
+        } // Relax only the masked pixels to soften the fill boundaries.
+        const selected = queue.subarray(0, tail);
+        for (let it = 0; it < 12; it++) {
+          for (const i of selected) {
+            const near = neighbors(i);
+            for (let c = 0; c < 3; c++) {
+              let sum = 0;
+              for (const j of near) sum += out[j * 4 + c];
+              out[i * 4 + c] = sum / near.length;
+            }
+          }
+          report(65 + (it / 12) * 25);
+        }
+        return out;
+      }
+      function upscale(data, w, h, factor) {
+        const ow = w * factor,
+          oh = h * factor,
+          out = new Uint8ClampedArray(ow * oh * 4); // Catmull-Rom bicubic interpolation, premultiplied alpha to avoid dark fringes.
+        const cubic = (t) => {
+          t = Math.abs(t);
+          return t <= 1
+            ? 1.5 * t * t * t - 2.5 * t * t + 1
+            : t < 2
+              ? -0.5 * t * t * t + 2.5 * t * t - 4 * t + 2
+              : 0;
+        };
+        for (let y = 0; y < oh; y++) {
+          const sy = (y + 0.5) / factor - 0.5,
+            iy = Math.floor(sy);
+          for (let x = 0; x < ow; x++) {
+            const sx = (x + 0.5) / factor - 0.5,
+              ix = Math.floor(sx),
+              s = [0, 0, 0, 0];
+            let total = 0;
+            for (let dy = -1; dy <= 2; dy++)
+              for (let dx = -1; dx <= 2; dx++) {
+                const a = cubic(sx - ix - dx) * cubic(sy - iy - dy),
+                  p = (clamp(iy + dy, 0, h - 1) * w + clamp(ix + dx, 0, w - 1)) * 4,
+                  alpha = data[p + 3] / 255;
+                total += a;
+                for (let c = 0; c < 3; c++) s[c] += data[p + c] * alpha * a;
+                s[3] += alpha * a;
+              }
+            const p = (y * ow + x) * 4;
+            for (let c = 0; c < 3; c++) out[p + c] = s[3] > 1e-6 ? s[c] / s[3] : 0;
+            out[p + 3] = (s[3] / total) * 255;
+          }
+          if (y % 16 === 0) report(5 + (y / oh) * 90);
+        }
+        return { data: out, w: ow, h: oh };
+      }
+      onmessage = (e) => {
+        try {
+          const { op, w, h, options = {}, mask } = e.data,
+            data = new Uint8ClampedArray(e.data.data);
+          report(3);
+          let result;
+          if (op === "deblur") result = deblur(data, w, h, options);
+          else if (op === "denoise") result = denoise(data, w, h, options.strength);
+          else if (op === "restore") result = restore(data, w, h, options.strength);
+          else if (op === "clean") result = clean(data, w, h, options);
+          else if (op === "repair") result = repair(data, w, h, new Uint8Array(mask));
+          else if (op === "upscale") result = upscale(data, w, h, options.factor);
+          else throw Error("Unknown operation. Reload Depix and try again.");
+          const output = result.data ? result : { data: result, w, h };
+          postMessage(
+            { done: true, w: output.w, h: output.h, data: output.data.buffer },
+            [output.data.buffer],
+          );
+        } catch (error) {
+          postMessage({ error: error.message });
+        }
+      };
+    </script>
+    <script>
+      "use strict";
+      const $ = (id) => document.getElementById(id);
+      const MAX_INPUT = 1500000,
+        MAX_OUTPUT = 6000000,
+        MAX_HISTORY = 48 * 1024 * 1024;
+      const after = $("after"),
+        before = $("before"),
+        overlay = $("overlay"),
+        frame = $("frame"),
+        stage = $("stage");
+      const ctx = after.getContext("2d", { willReadFrequently: true }),
+        bctx = before.getContext("2d"),
+        octx = overlay.getContext("2d");
+      let original = null,
+        current = null,
+        undoStack = [],
+        future = [],
+        mask = null,
+        textRegion = null,
+        mode = "compare",
+        activeTab = "enhance",
+        busy = false,
+        worker = null,
+        ocrWorker = null,
+        ocrScriptPromise = null,
+        cancelHandler = null,
+        lastAction = null,
+        fileName = "image",
+        fit = true,
+        scale = 1,
+        pointer = null,
+        keyboardCursor = { x: 0, y: 0 },
+        jobId = 0;
+      const snapshot = () => ({
+        w: current.w,
+        h: current.h,
+        data: new Uint8ClampedArray(current.data),
+      });
+      function say(message, error = false, retry = false) {
+        $("status").textContent = message;
+        $("status").classList.toggle("error", error);
+        $("retry").hidden = !retry;
+      }
+      function updateButtons() {
+        document
+          .querySelectorAll("[data-image]")
+          .forEach((el) => (el.disabled = !current || busy));
+        for (const id of ["zoom-in", "zoom-out", "zoom-fit", "reset"])
+          $(id).disabled = !current || busy;
+        $("compare").disabled = !current || busy || mode !== "compare";
+        $("undo").disabled = busy || !undoStack.length;
+        $("redo").disabled = busy || !future.length;
+        $("upload-top").disabled = busy;
+        $("upload").disabled = busy;
+        $("sample").disabled = busy;
+        $("copy").disabled = busy || !$("ocr-output").value;
+        $("theme").disabled = busy;
+        document
+          .querySelectorAll(".panel input,.panel select,#format")
+          .forEach((el) => (el.disabled = busy));
+        frame.setAttribute("aria-busy", String(busy));
+      }
+      function setBusy(value) {
+        busy = value;
+        $("progress-row").hidden = !value;
+        $("progress").value = 0;
+        updateButtons();
+      }
+      function trimHistory() {
+        let bytes = undoStack
+          .concat(future)
+          .reduce((s, item) => s + item.data.byteLength, 0);
+        while (bytes > MAX_HISTORY && undoStack.length > 1) {
+          bytes -= undoStack.shift().data.byteLength;
+        }
+        while (bytes > MAX_HISTORY && future.length) {
+          bytes -= future.shift().data.byteLength;
+        }
+      }
+      function clearSelections() {
+        mask = new Uint8Array(current.w * current.h);
+        textRegion = null;
+        keyboardCursor = {
+          x: Math.floor(current.w / 2),
+          y: Math.floor(current.h / 2),
+        };
+        $("region-info").textContent =
+          "No selection. OCR uses the whole image.";
+        $("ocr-output").value = "";
+        $("confidence").textContent = "";
+        drawOverlay();
+      }
+      function render() {
+        after.width = current.w;
+        after.height = current.h;
+        ctx.putImageData(
+          new ImageData(current.data, current.w, current.h),
+          0,
+          0,
+        );
+        before.width = current.w;
+        before.height = current.h;
+        bctx.clearRect(0, 0, current.w, current.h);
+        bctx.drawImage(original, 0, 0, current.w, current.h);
+        overlay.width = current.w;
+        overlay.height = current.h;
+        $("empty").hidden = true;
+        frame.hidden = false;
+        $("dimensions").textContent =
+          `${current.w.toLocaleString()} × ${current.h.toLocaleString()} PX · ${((current.w * current.h) / 1e6).toFixed(2)} MP`;
+        $("file-name").textContent = fileName;
+        resizeView();
+        drawOverlay();
+        updateComparison();
+        updateButtons();
+      }
+      function resizeView() {
+        if (!current) return;
+        if (fit)
+          scale = Math.min(
+            (stage.clientWidth - 32) / current.w,
+            (stage.clientHeight - 32) / current.h,
+            1,
+          );
+        scale = Math.max(0.02, scale);
+        frame.style.width = `${Math.round(current.w * scale)}px`;
+        frame.style.height = `${Math.round(current.h * scale)}px`;
+        $("zoom-label").textContent =
+          `${Math.round(scale * 100)}%${fit ? " · FIT" : ""}`;
+      }
+      new ResizeObserver(() => resizeView()).observe(stage);
+      function updateComparison() {
+        const value = mode === "compare" ? Number($("compare").value) : 0;
+        before.style.clipPath = `inset(0 ${100 - value}% 0 0)`;
+        $("divider").style.left = value + "%";
+        $("divider").hidden =
+          mode !== "compare" || value === 0 || value === 100;
+      }
+      function setMode(next) {
+        mode = next;
+        pointer = null;
+        for (const id of ["paint", "erase", "select-text"])
+          $(id).setAttribute(
+            "aria-pressed",
+            String(
+              next ===
+                { paint: "paint", erase: "erase", "select-text": "text" }[id],
+            ),
+          );
+        $("view-mode").textContent =
+          next === "compare"
+            ? "BEFORE / AFTER"
+            : next === "text"
+              ? "SELECT TEXT AREA"
+              : next === "erase"
+                ? "ERASE MASK"
+                : "PAINT DAMAGE";
+        frame.style.cursor = next === "compare" ? "ew-resize" : "crosshair";
+        updateComparison();
+        drawOverlay();
+        updateButtons();
+      }
+      function commit(image, message) {
+        undoStack.push(snapshot());
+        future = [];
+        current = image;
+        trimHistory();
+        clearSelections();
+        setMode("compare");
+        render();
+        say(message + " Undo is available.");
+      }
+      function loadCanvas(canvas, name) {
+        original = document.createElement("canvas");
+        original.width = canvas.width;
+        original.height = canvas.height;
+        original.getContext("2d").drawImage(canvas, 0, 0);
+        current = {
+          w: canvas.width,
+          h: canvas.height,
+          data: canvas
+            .getContext("2d")
+            .getImageData(0, 0, canvas.width, canvas.height).data,
+        };
+        fileName = name;
+        undoStack = [];
+        future = [];
+        fit = true;
+        clearSelections();
+        setMode("compare");
+        render();
+        say(
+          "Image ready. Start with a small repair, or choose an enhancement.",
+        );
+      }
+      function checkReplace() {
+        return (
+          !current ||
+          !undoStack.length ||
+          confirm(
+            "Replace this image? Download first if you want to keep your edits.",
+          )
+        );
+      }
+      async function loadFile(file) {
+        if (busy) return;
+        if (!file || !/^image\/(png|jpeg|webp|bmp|x-ms-bmp)$/.test(file.type)) {
+          say(
+            "Choose a JPG, PNG, WebP, or BMP image. Other file types are not supported.",
+            true,
+          );
+          return;
+        }
+        if (file.size > 25 * 1024 * 1024) {
+          say(
+            "This file is larger than 25 MB. Export a smaller copy and choose it again.",
+            true,
+          );
+          return;
+        }
+        if (!checkReplace()) return;
+        setBusy(true);
+        say("Opening your image locally…");
+        const id = ++jobId;
+        let url;
+        cancelHandler = () => {
+          jobId++;
+          setBusy(false);
+          say("Opening canceled. Your current image is unchanged.");
+        };
+        try {
+          url = URL.createObjectURL(file);
+          const image = new Image();
+          image.src = url;
+          await image.decode();
+          if (id !== jobId) return;
+          const { naturalWidth: w, naturalHeight: h } = image;
+          if (!w || !h || w * h > 60000000)
+            throw Error(
+              "This image exceeds 60 megapixels. Resize it before opening to protect browser memory.",
+            );
+          const ratio = Math.min(
+            1,
+            Math.sqrt(MAX_INPUT / (w * h)),
+            2048 / Math.max(w, h),
+          );
+          if (
+            ratio < 1 &&
+            !confirm(
+              `This image is ${w} × ${h}. Resize the working copy to ${Math.round(w * ratio)} × ${Math.round(h * ratio)} for safe browser processing? Your original file is unchanged.`,
+            )
+          ) {
+            say("Image not opened. Choose a smaller image or accept resizing.");
+            return;
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(w * ratio));
+          canvas.height = Math.max(1, Math.round(h * ratio));
+          canvas
+            .getContext("2d")
+            .drawImage(image, 0, 0, canvas.width, canvas.height);
+          loadCanvas(canvas, file.name || "pasted-image.png");
+          if (ratio < 1)
+            say(
+              `Opened a resized working copy (${canvas.width} × ${canvas.height}). Your original file is untouched.`,
+            );
+        } catch (error) {
+          if (id === jobId)
+            say(
+              error.message.startsWith("This image")
+                ? error.message
+                : "Could not decode this image. Try exporting it as PNG or JPG, then choose it again.",
+              true,
+            );
+        } finally {
+          if (url) URL.revokeObjectURL(url);
+          if (id === jobId) {
+            cancelHandler = null;
+            setBusy(false);
+          }
+        }
+      }
+      function sample() {
+        if (!checkReplace()) return;
+        const c = document.createElement("canvas");
+        c.width = 640;
+        c.height = 400;
+        const g = c.getContext("2d");
+        g.fillStyle = "#dfd9bf";
+        g.fillRect(0, 0, 640, 400);
+        const sky = g.createLinearGradient(0, 0, 0, 340);
+        sky.addColorStop(0, "#7d968b");
+        sky.addColorStop(1, "#d1c9a2");
+        g.fillStyle = sky;
+        g.fillRect(22, 22, 596, 290);
+        g.fillStyle = "#e6dcaa";
+        g.beginPath();
+        g.arc(473, 80, 30, 0, Math.PI * 2);
+        g.fill();
+        g.fillStyle = "#617867";
+        g.beginPath();
+        g.moveTo(22, 260);
+        g.lineTo(155, 59);
+        g.lineTo(283, 237);
+        g.lineTo(410, 104);
+        g.lineTo(618, 281);
+        g.lineTo(618, 312);
+        g.lineTo(22, 312);
+        g.fill();
+        g.fillStyle = "#cbd0bd";
+        g.beginPath();
+        g.moveTo(119, 114);
+        g.lineTo(155, 59);
+        g.lineTo(191, 110);
+        g.lineTo(154, 94);
+        g.fill();
+        g.fillStyle = "#849b90";
+        g.fillRect(22, 260, 596, 52);
+        g.strokeStyle = "#b6c2ab";
+        for (let y = 269; y < 312; y += 9) {
+          g.beginPath();
+          g.moveTo(22, y);
+          g.lineTo(618, y);
+          g.stroke();
+        }
+        g.fillStyle = "#394b3c";
+        for (let i = 0; i < 8; i++) {
+          const x = 35 + i * 17;
+          g.beginPath();
+          g.moveTo(x, 289);
+          g.lineTo(x + 9, 226 - (i % 3) * 9);
+          g.lineTo(x + 19, 289);
+          g.fill();
+        }
+        g.fillStyle = "#394337";
+        g.font = "bold 26px sans-serif";
+        g.fillText("NORTH SHORE", 27, 354);
+        g.font = "16px monospace";
+        g.fillText("SUMMER, 1984", 422, 354);
+        g.font = "11px monospace";
+        g.fillText("SAMPLE SCAN / ORIGINAL ILLUSTRATION", 27, 379);
+        const d = g.getImageData(0, 0, 640, 400);
+        let seed = 12345;
+        for (let i = 0; i < d.data.length; i += 4) {
+          seed = (seed * 1664525 + 1013904223) >>> 0;
+          const noise = (seed / 4294967296 - 0.5) * 17;
+          for (let k = 0; k < 3; k++)
+            d.data[i + k] = d.data[i + k] * 0.84 + 30 + noise;
+        }
+        g.putImageData(d, 0, 0);
+        g.strokeStyle = "rgba(242,235,203,.7)";
+        g.lineWidth = 2;
+        g.beginPath();
+        g.moveTo(295, 28);
+        g.lineTo(291, 132);
+        g.lineTo(299, 245);
+        g.lineTo(296, 310);
+        g.stroke();
+        loadCanvas(c, "north-shore · sample illustration");
+      }
+      function workerTask(op, options = {}) {
+        return new Promise((resolve, reject) => {
+          const url = URL.createObjectURL(
+            new Blob([$("worker-code").textContent], {
+              type: "text/javascript",
+            }),
+          );
+          try {
+            worker = new Worker(url);
+          } catch (error) {
+            URL.revokeObjectURL(url);
+            reject(
+              Error(
+                "Your browser blocked the local processing worker. Allow scripts or try a current Chrome, Firefox, or Safari.",
+              ),
+            );
+            return;
+          }
+          URL.revokeObjectURL(url);
+          worker.onmessage = (e) => {
+            if ("progress" in e.data) $("progress").value = e.data.progress;
+            else if (e.data.error) {
+              worker.terminate();
+              worker = null;
+              reject(Error(e.data.error));
+            } else if (e.data.done) {
+              worker.terminate();
+              worker = null;
+              resolve({
+                w: e.data.w,
+                h: e.data.h,
+                data: new Uint8ClampedArray(e.data.data),
+              });
+            }
+          };
+          worker.onerror = () => {
+            worker.terminate();
+            worker = null;
+            reject(
+              Error(
+                "Processing ran out of resources. Retry with a smaller image or lower strength.",
+              ),
+            );
+          };
+          cancelHandler = () => {
+            if (worker) {
+              worker.terminate();
+              worker = null;
+            }
+            reject(Error("Canceled. Your image is unchanged."));
+          };
+          const data = new Uint8ClampedArray(current.data);
+          const payload = {
+            op,
+            w: current.w,
+            h: current.h,
+            data: data.buffer,
+            options,
+          };
+          const transfers = [data.buffer];
+          if (op === "repair") {
+            const m = new Uint8Array(mask);
+            payload.mask = m.buffer;
+            transfers.push(m.buffer);
+          }
+          worker.postMessage(payload, transfers);
+        });
+      }
+      async function apply(op, options, label) {
+        if (!current || busy) return;
+        lastAction = () => apply(op, options, label);
+        if (
+          op === "upscale" &&
+          current.w * current.h * options.factor ** 2 > MAX_OUTPUT
+        ) {
+          say(
+            `This ${options.factor}× result would exceed 6 megapixels. Use “Resize for safe 4×” first, or choose a smaller scale.`,
+            true,
+          );
+          return;
+        }
+        setBusy(true);
+        say(`${label}… Working on your device.`);
+        try {
+          const result = await workerTask(op, options);
+          commit(result, label + " complete.");
+        } catch (error) {
+          say(error.message, true, !error.message.startsWith("Canceled"));
+        } finally {
+          cancelHandler = null;
+          setBusy(false);
+        }
+      }
+      function drawOverlay() {
+        if (!current) return;
+        octx.clearRect(0, 0, current.w, current.h);
+        if (mask) {
+          const d = octx.createImageData(current.w, current.h);
+          for (let i = 0; i < mask.length; i++)
+            if (mask[i]) {
+              d.data[i * 4] = 190;
+              d.data[i * 4 + 1] = 235;
+              d.data[i * 4 + 2] = 120;
+              d.data[i * 4 + 3] = 130;
+            }
+          octx.putImageData(d, 0, 0);
+        }
+        if (textRegion) {
+          octx.strokeStyle = "#d5ed9b";
+          octx.lineWidth = Math.max(2, 2 / scale);
+          octx.strokeRect(
+            textRegion.x,
+            textRegion.y,
+            textRegion.w,
+            textRegion.h,
+          );
+        }
+        if (mode === "paint" || mode === "erase") {
+          octx.strokeStyle = "#ffffff";
+          octx.lineWidth = Math.max(1, 1 / scale);
+          octx.beginPath();
+          octx.arc(
+            keyboardCursor.x,
+            keyboardCursor.y,
+            Number($("brush").value) / 2,
+            0,
+            Math.PI * 2,
+          );
+          octx.stroke();
+        }
+      }
+      function point(event) {
+        const r = frame.getBoundingClientRect();
+        return {
+          x: Math.max(
+            0,
+            Math.min(
+              current.w - 1,
+              ((event.clientX - r.left) * current.w) / r.width,
+            ),
+          ),
+          y: Math.max(
+            0,
+            Math.min(
+              current.h - 1,
+              ((event.clientY - r.top) * current.h) / r.height,
+            ),
+          ),
+        };
+      }
+      function paintAt(p) {
+        const r = Number($("brush").value) / 2;
+        for (
+          let y = Math.max(0, Math.floor(p.y - r));
+          y <= Math.min(current.h - 1, Math.ceil(p.y + r));
+          y++
+        )
+          for (
+            let x = Math.max(0, Math.floor(p.x - r));
+            x <= Math.min(current.w - 1, Math.ceil(p.x + r));
+            x++
+          )
+            if ((x - p.x) ** 2 + (y - p.y) ** 2 <= r * r)
+              mask[y * current.w + x] = mode === "erase" ? 0 : 1;
+        keyboardCursor = p;
+      }
+      function paintLine(a, b) {
+        const distance = Math.hypot(b.x - a.x, b.y - a.y),
+          steps = Math.max(
+            1,
+            Math.ceil(distance / Math.max(1, Number($("brush").value) / 4)),
+          );
+        for (let i = 0; i <= steps; i++)
+          paintAt({
+            x: a.x + ((b.x - a.x) * i) / steps,
+            y: a.y + ((b.y - a.y) * i) / steps,
+          });
+        drawOverlay();
+      }
+      function syncRegion() {
+        if (textRegion) {
+          for (const [key, v] of Object.entries(textRegion))
+            $("text-" + key).value = String(v);
+          $("region-info").textContent =
+            `Selected ${textRegion.w} × ${textRegion.h} px at (${textRegion.x}, ${textRegion.y}).`;
+        }
+        drawOverlay();
+      }
+      function regionFromInputs(prefix) {
+        const vals = ["x", "y", "w", "h"].map((k) =>
+          Number($(prefix + "-" + k).value),
+        );
+        if (
+          vals.some((v) => !Number.isInteger(v)) ||
+          vals[0] < 0 ||
+          vals[1] < 0 ||
+          vals[2] < 1 ||
+          vals[3] < 1 ||
+          vals[0] + vals[2] > current.w ||
+          vals[1] + vals[3] > current.h
+        )
+          throw Error(
+            `Enter a rectangle inside the image (${current.w} × ${current.h}). Width and height must be at least 1 pixel.`,
+          );
+        return { x: vals[0], y: vals[1], w: vals[2], h: vals[3] };
+      }
+      frame.addEventListener("pointerdown", (e) => {
+        if (!current || busy) return;
+        if (e.button !== 0) return;
+        e.preventDefault();
+        frame.focus({ preventScroll: true });
+        frame.setPointerCapture(e.pointerId);
+        const p = point(e);
+        pointer = { start: p, last: p, id: e.pointerId };
+        if (mode === "paint" || mode === "erase") {
+          paintAt(p);
+          drawOverlay();
+        } else if (mode === "compare") {
+          $("compare").value = String((p.x / current.w) * 100);
+          updateComparison();
+        }
+      });
+      frame.addEventListener("pointermove", (e) => {
+        if (!pointer || busy) return;
+        const p = point(e);
+        if (mode === "paint" || mode === "erase") paintLine(pointer.last, p);
+        else if (mode === "text") {
+          const x = Math.floor(Math.min(p.x, pointer.start.x)),
+            y = Math.floor(Math.min(p.y, pointer.start.y));
+          textRegion = {
+            x,
+            y,
+            w: Math.max(1, Math.ceil(Math.abs(p.x - pointer.start.x))),
+            h: Math.max(1, Math.ceil(Math.abs(p.y - pointer.start.y))),
+          };
+          syncRegion();
+        } else {
+          $("compare").value = String((p.x / current.w) * 100);
+          updateComparison();
+        }
+        pointer.last = p;
+      });
+      for (const event of ["pointerup", "pointercancel", "lostpointercapture"])
+        frame.addEventListener(event, () => (pointer = null));
+      frame.addEventListener("keydown", (e) => {
+        if (busy || !current || !["paint", "erase"].includes(mode)) return;
+        const step = e.shiftKey ? 20 : 2;
+        if (
+          ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(
+            e.key,
+          )
+        ) {
+          e.preventDefault();
+          if (e.key === " ") paintAt(keyboardCursor);
+          else {
+            keyboardCursor.x = Math.max(
+              0,
+              Math.min(
+                current.w - 1,
+                keyboardCursor.x +
+                  (e.key === "ArrowRight"
+                    ? step
+                    : e.key === "ArrowLeft"
+                      ? -step
+                      : 0),
+              ),
+            );
+            keyboardCursor.y = Math.max(
+              0,
+              Math.min(
+                current.h - 1,
+                keyboardCursor.y +
+                  (e.key === "ArrowDown"
+                    ? step
+                    : e.key === "ArrowUp"
+                      ? -step
+                      : 0),
+              ),
+            );
+          }
+          drawOverlay();
+        }
+      });
+      async function loadOCRScript() {
+        if (window.Tesseract) return;
+        if (ocrScriptPromise) return ocrScriptPromise;
+        ocrScriptPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src =
+            "https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js";
+          script.async = true;
+          script.crossOrigin = "anonymous";
+          script.integrity =
+            "sha384-2BQ3U3OdKOb0Uczxqr41I9UvZkzr4V9Hv8uSzMMZAlmhsFClvdZX5wi5fDCzG+tM";
+          const timer = setTimeout(() => {
+            script.remove();
+            reject(
+              Error(
+                "OCR download timed out. Image enhancement still works. Check your connection and retry OCR.",
+              ),
+            );
+          }, 30000);
+          script.onload = () => {
+            clearTimeout(timer);
+            resolve();
+          };
+          script.onerror = () => {
+            clearTimeout(timer);
+            script.remove();
+            reject(
+              Error(
+                "OCR could not load. Classic text enhancement is available. Check your connection, allow jsDelivr, and retry OCR.",
+              ),
+            );
+          };
+          document.head.append(script);
+        });
+        try {
+          await ocrScriptPromise;
+        } catch (error) {
+          ocrScriptPromise = null;
+          throw error;
+        }
+      }
+      async function readText() {
+        if (!current || busy) return;
+        lastAction = readText;
+        setBusy(true);
+        say("Preparing a private text crop…");
+        const id = ++jobId;
+        let localWorker = null;
+        cancelHandler = () => {
+          jobId++;
+          if (localWorker) localWorker.terminate();
+          if (ocrWorker === localWorker) ocrWorker = null;
+          setBusy(false);
+          say("OCR canceled. Your image is unchanged.");
+        };
+        try {
+          const r = textRegion || { x: 0, y: 0, w: current.w, h: current.h };
+          const crop = document.createElement("canvas");
+          crop.width = r.w;
+          crop.height = r.h;
+          const cg = crop.getContext("2d", { willReadFrequently: true });
+          cg.fillStyle = "white";
+          cg.fillRect(0, 0, r.w, r.h);
+          cg.drawImage(after, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
+          const d = cg.getImageData(0, 0, r.w, r.h);
+          for (let i = 0; i < d.data.length; i += 4) {
+            const v = Math.max(
+              0,
+              Math.min(
+                255,
+                (0.299 * d.data[i] +
+                  0.587 * d.data[i + 1] +
+                  0.114 * d.data[i + 2] -
+                  128) *
+                  1.35 +
+                  128,
+              ),
+            );
+            d.data[i] = d.data[i + 1] = d.data[i + 2] = v;
+          }
+          cg.putImageData(d, 0, 0);
+          const factor = Math.min(2, Math.sqrt(2000000 / (r.w * r.h)));
+          const enlarged = document.createElement("canvas");
+          enlarged.width = Math.max(1, Math.round(r.w * factor));
+          enlarged.height = Math.max(1, Math.round(r.h * factor));
+          enlarged
+            .getContext("2d")
+            .drawImage(crop, 0, 0, enlarged.width, enlarged.height);
+          say(
+            "Loading free OCR engine and language data. Image stays on your device…",
+          );
+          await loadOCRScript();
+          if (id !== jobId) return;
+          localWorker = await window.Tesseract.createWorker(
+            $("language").value,
+            1,
+            {
+              workerPath:
+                "https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/worker.min.js",
+              corePath: "https://cdn.jsdelivr.net/npm/tesseract.js-core@7.0.0",
+              langPath:
+                "https://cdn.jsdelivr.net/npm/@tesseract.js-data/" +
+                $("language").value +
+                "@1.0.0/4.0.0_best_int",
+              logger: (m) => {
+                if (id === jobId) {
+                  $("progress").value = Math.round((m.progress || 0) * 100);
+                  say(
+                    m.status === "recognizing text"
+                      ? "Reading the selected text locally…"
+                      : "Loading OCR: " + m.status + "…",
+                  );
+                }
+              },
+            },
+          );
+          if (id !== jobId) {
+            await localWorker.terminate();
+            return;
+          }
+          ocrWorker = localWorker;
+          await localWorker.setParameters({ tessedit_pageseg_mode: "6" });
+          const { data } = await localWorker.recognize(enlarged);
+          if (id !== jobId) return;
+          $("ocr-output").value = data.text.trim();
+          $("confidence").textContent = Math.round(data.confidence) + "%";
+          say(
+            data.text.trim()
+              ? "Text detected. Review it carefully before copying."
+              : "No readable text found. Select a tighter area, increase contrast, or try a clearer image.",
+            !data.text.trim(),
+            !data.text.trim(),
+          );
+        } catch (error) {
+          if (id === jobId)
+            say(
+              "OCR failed. Your image is unchanged. Classic “Enhance text area” still works. Check your connection or try a smaller text selection, then retry.",
+              true,
+              true,
+            );
+        } finally {
+          if (localWorker) await localWorker.terminate();
+          if (id === jobId) {
+            ocrWorker = null;
+            cancelHandler = null;
+            setBusy(false);
+          }
+        }
+      }
+      function selectTab(name, focus = false) {
+        activeTab = name;
+        document.querySelectorAll("[data-tab]").forEach((tab) => {
+          const selected = tab.dataset.tab === name;
+          tab.setAttribute("aria-selected", String(selected));
+          tab.tabIndex = selected ? 0 : -1;
+          if (selected && focus) tab.focus();
+        });
+        for (const tab of ["enhance", "repair", "text"])
+          $("panel-" + tab).hidden = tab !== name;
+        setMode("compare");
+      }
+      document.querySelectorAll("[data-tab]").forEach((tab) => {
+        tab.addEventListener("click", () => selectTab(tab.dataset.tab));
+        tab.addEventListener("keydown", (e) => {
+          const names = ["enhance", "repair", "text"];
+          if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) {
+            e.preventDefault();
+            const i = names.indexOf(activeTab),
+              next =
+                e.key === "Home"
+                  ? 0
+                  : e.key === "End"
+                    ? 2
+                    : (i + (e.key === "ArrowRight" ? 1 : 2)) % 3;
+            selectTab(names[next], true);
+          }
+        });
+      });
+      $("blur-type").addEventListener("change", () => {
+        $("angle-control").hidden = $("blur-type").value !== "motion";
+      });
+      for (const [id, suffix] of [
+        ["strength", "%"],
+        ["noise", "%"],
+        ["color", "%"],
+        ["angle", "°"],
+        ["brush", " px"],
+      ])
+        $(id).addEventListener("input", () => {
+          $(id + "-value").textContent = $(id).value + suffix;
+          if (id === "brush") drawOverlay();
+        });
+      $("deblur").addEventListener("click", () =>
+        apply(
+          "deblur",
+          {
+            kind: $("blur-type").value,
+            strength: Number($("strength").value) / 100,
+            angle: Number($("angle").value),
+          },
+          "Deblur and sharpen",
+        ),
+      );
+      $("denoise").addEventListener("click", () =>
+        apply(
+          "denoise",
+          { strength: Number($("noise").value) / 100 },
+          "Noise reduction",
+        ),
+      );
+      $("restore").addEventListener("click", () =>
+        apply(
+          "restore",
+          { strength: Number($("color").value) / 100 },
+          "Color and contrast restoration",
+        ),
+      );
+      for (const factor of [2, 4])
+        $("upscale" + factor).addEventListener("click", () =>
+          apply("upscale", { factor }, factor + "× enlargement"),
+        );
+      $("fit4").addEventListener("click", () => {
+        if (!current || busy) return;
+        const ratio = Math.min(
+          1,
+          Math.sqrt(MAX_OUTPUT / 16 / (current.w * current.h)),
+        );
+        if (ratio === 1) {
+          say("This image is already small enough for 4×. Choose Upscale 4×.");
+          return;
+        }
+        if (
+          !confirm(
+            "Resize this working image so a subsequent 4× enlargement stays under 6 megapixels? This reduces its current resolution. Undo is available.",
+          )
+        )
+          return;
+        const c = document.createElement("canvas");
+        c.width = Math.floor(current.w * ratio);
+        c.height = Math.floor(current.h * ratio);
+        c.getContext("2d").drawImage(after, 0, 0, c.width, c.height);
+        commit(
+          {
+            w: c.width,
+            h: c.height,
+            data: c.getContext("2d").getImageData(0, 0, c.width, c.height).data,
+          },
+          "Working copy resized for safe 4×.",
+        );
+      });
+      $("paint").addEventListener("click", () =>
+        setMode(mode === "paint" ? "compare" : "paint"),
+      );
+      $("erase").addEventListener("click", () =>
+        setMode(mode === "erase" ? "compare" : "erase"),
+      );
+      $("select-text").addEventListener("click", () =>
+        setMode(mode === "text" ? "compare" : "text"),
+      );
+      $("clear-mask").addEventListener("click", () => {
+        mask.fill(0);
+        drawOverlay();
+        say("Mask cleared. Your image has not changed.");
+      });
+      $("repair").addEventListener("click", () =>
+        apply("repair", {}, "Damage fill"),
+      );
+      $("mark-rectangle").addEventListener("click", () => {
+        try {
+          const r = regionFromInputs("repair");
+          for (let y = r.y; y < r.y + r.h; y++)
+            mask.fill(1, y * current.w + r.x, y * current.w + r.x + r.w);
+          drawOverlay();
+          say("Rectangle marked. Choose Fill damage, or clear the mask.");
+        } catch (error) {
+          say(error.message, true);
+        }
+      });
+      $("set-text-region").addEventListener("click", () => {
+        try {
+          textRegion = regionFromInputs("text");
+          syncRegion();
+          say("Text area selected. Enhance or read this area.");
+        } catch (error) {
+          say(error.message, true);
+        }
+      });
+      $("whole-text").addEventListener("click", () => {
+        textRegion = null;
+        $("region-info").textContent =
+          "No selection. OCR uses the whole image.";
+        drawOverlay();
+      });
+      $("clean-text").addEventListener("click", () =>
+        apply(
+          "clean",
+          {
+            region: textRegion ? { ...textRegion } : null,
+            threshold: $("threshold").value,
+          },
+          "Text area enhancement",
+        ),
+      );
+      $("ocr").addEventListener("click", readText);
+      $("copy").addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText($("ocr-output").value);
+          say("Detected text copied.");
+        } catch (error) {
+          $("ocr-output").focus();
+          $("ocr-output").select();
+          say(
+            "Clipboard access is blocked. Text is selected: press Ctrl/Cmd + C, or use your device’s Copy command.",
+            true,
+          );
+        }
+      });
+      function navigateHistory(redo = false) {
+        if (busy || !(redo ? future : undoStack).length) return;
+        (redo ? undoStack : future).push(snapshot());
+        current = (redo ? future : undoStack).pop();
+        trimHistory();
+        clearSelections();
+        setMode("compare");
+        render();
+        say(redo ? "Edit restored." : "Last edit undone.");
+      }
+      $("undo").addEventListener("click", () => navigateHistory());
+      $("redo").addEventListener("click", () => navigateHistory(true));
+      $("reset").addEventListener("click", () => {
+        if (
+          !confirm(
+            "Reset to the original working image? You can undo this reset.",
+          )
+        )
+          return;
+        commit(
+          {
+            w: original.width,
+            h: original.height,
+            data: original
+              .getContext("2d")
+              .getImageData(0, 0, original.width, original.height).data,
+          },
+          "Reset to the original working image.",
+        );
+        fit = true;
+        resizeView();
+      });
+      $("compare").addEventListener("input", updateComparison);
+      $("zoom-in").addEventListener("click", () => {
+        fit = false;
+        scale = Math.min(8, scale * 1.3);
+        resizeView();
+      });
+      $("zoom-out").addEventListener("click", () => {
+        fit = false;
+        scale = Math.max(0.05, scale / 1.3);
+        resizeView();
+      });
+      $("zoom-fit").addEventListener("click", () => {
+        fit = true;
+        resizeView();
+      });
+      for (const id of ["upload", "upload-top"])
+        $(id).addEventListener("click", () => {
+          $("file-input").value = "";
+          $("file-input").click();
+        });
+      $("file-input").addEventListener("change", (e) =>
+        loadFile(e.target.files[0]),
+      );
+      $("sample").addEventListener("click", sample);
+      for (const event of ["dragenter", "dragover"])
+        stage.addEventListener(event, (e) => {
+          e.preventDefault();
+          if (!busy) stage.classList.add("dragover");
+        });
+      for (const event of ["dragleave", "drop"])
+        stage.addEventListener(event, (e) => {
+          e.preventDefault();
+          stage.classList.remove("dragover");
+        });
+      stage.addEventListener("drop", (e) => loadFile(e.dataTransfer.files[0]));
+      window.addEventListener("dragover", (e) => e.preventDefault());
+      window.addEventListener("drop", (e) => e.preventDefault());
+      document.addEventListener("paste", (e) => {
+        if (
+          busy ||
+          (e.target instanceof Element && e.target.matches("input,textarea"))
+        )
+          return;
+        const item = [...e.clipboardData.items].find((x) =>
+          x.type.startsWith("image/"),
+        );
+        if (item) {
+          e.preventDefault();
+          loadFile(item.getAsFile());
+        }
+      });
+      $("cancel").addEventListener("click", () => {
+        if (cancelHandler) cancelHandler();
+      });
+      $("retry").addEventListener("click", () => {
+        if (lastAction && !busy) lastAction();
+      });
+      $("download").addEventListener("click", async () => {
+        if (!current || busy) return;
+        lastAction = () => $("download").click();
+        setBusy(true);
+        const id = ++jobId;
+        cancelHandler = () => {
+          jobId++;
+          setBusy(false);
+          say("Download canceled. Your image is unchanged.");
+        };
+        say("Preparing your download…");
+        try {
+          const format = $("format").value;
+          let canvas = after;
+          if (format === "jpg") {
+            canvas = document.createElement("canvas");
+            canvas.width = current.w;
+            canvas.height = current.h;
+            const g = canvas.getContext("2d");
+            g.fillStyle = "white";
+            g.fillRect(0, 0, canvas.width, canvas.height);
+            g.drawImage(after, 0, 0);
+          }
+          const blob = await new Promise((resolve, reject) =>
+            canvas.toBlob(
+              (b) =>
+                b
+                  ? resolve(b)
+                  : reject(
+                      Error(
+                        "Browser could not encode this image. Try PNG or use a smaller image.",
+                      ),
+                    ),
+              format === "jpg" ? "image/jpeg" : "image/png",
+              0.94,
+            ),
+          );
+          if (id !== jobId) return;
+          const url = URL.createObjectURL(blob),
+            a = document.createElement("a");
+          a.href = url;
+          a.download =
+            fileName
+              .replace(/\.[^.]+$/, "")
+              .replace(/[^a-z0-9_-]/gi, "-")
+              .slice(0, 80) +
+            "-depix." +
+            format;
+          document.body.append(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 60000);
+          say(
+            "Download prepared. Check your browser downloads. If blocked, allow downloads for this site and retry.",
+          );
+        } catch (error) {
+          if (id === jobId) say(error.message, true, true);
+        } finally {
+          if (id === jobId) {
+            cancelHandler = null;
+            setBusy(false);
+          }
+        }
+      });
+      function openDialog(id) {
+        $(id).showModal();
+      }
+      for (const [button, dialog] of [
+        ["help-button", "help-dialog"],
+        ["privacy-button", "privacy-dialog"],
+      ])
+        $(button).addEventListener("click", () => openDialog(dialog));
+      document
+        .querySelectorAll("[data-close]")
+        .forEach((button) =>
+          button.addEventListener("click", () =>
+            button.closest("dialog").close(),
+          ),
+        );
+      document.querySelectorAll("dialog").forEach((dialog) =>
+        dialog.addEventListener("click", (e) => {
+          if (e.target === dialog) {
+            const r = dialog.getBoundingClientRect();
+            if (
+              e.clientX < r.left ||
+              e.clientX > r.right ||
+              e.clientY < r.top ||
+              e.clientY > r.bottom
+            )
+              dialog.close();
+          }
+        }),
+      );
+      $("theme").addEventListener("click", () => {
+        const light = document.documentElement.dataset.theme !== "light";
+        document.documentElement.dataset.theme = light ? "light" : "dark";
+        $("theme").setAttribute(
+          "aria-label",
+          light ? "Switch to dark theme" : "Switch to light theme",
+        );
+      });
+      document.addEventListener("keydown", (e) => {
+        if (
+          e.target.matches("input,textarea,select") ||
+          document.querySelector("dialog[open]")
+        )
+          return;
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
+          e.preventDefault();
+          navigateHistory(e.shiftKey);
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") {
+          e.preventDefault();
+          navigateHistory(true);
+        }
+      });
+      window.addEventListener("beforeunload", (e) => {
+        if (undoStack.length) {
+          e.preventDefault();
+          e.returnValue = "";
+        }
+      });
+      updateButtons();
+    </script>
+  </body>
+</html>
